@@ -3,7 +3,7 @@
 #include "Depends/vars.h"
 #include "Depends/functions.h"
 #include "motorFunctions.ino"
-#include "SerialCommandProcessor.ino"
+#include "SerialBridge.ino"
 void setup()
 {
     Serial.begin(9600);
