@@ -1,20 +1,21 @@
-DRIVESYSTEM
+# DriveSystem
 
 
-This program is a complete rewrite of the previous MicroROS drive system. Currently in Closed Alpha
+## This program is a complete rewrite of the previous MicroROS drive system. Currently in Closed Alpha
 
 Future Features:
 
-*Individual Motor Control
+* Individual Motor Control
 
-*Inteligent Traction control
+* Inteligent Traction control
   
-  *Realtime RPM/Power readouts from the motors back to the jetson
+  * Realtime RPM/Power readouts from the motors back to the jetson
 
-*Error Detection and correction
+* Error Detection and correction
 
-*Anything else the teams ask for.
+* Anything else the teams ask for.
 
 This system is licenced under the MIT licence.
 
-Authored by Michael Chapman
+
+See this document for information on specifics. [DriveSystem information](SerialCommands.md)
