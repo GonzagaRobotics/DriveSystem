@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "vars.cpp"
+#include "Depends/vars.h"
+#include "Depends/functions.h"
 #include "motorControl.cpp"
 void setup()
 {

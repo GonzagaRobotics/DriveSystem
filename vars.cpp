@@ -1,1 +1,0 @@
-int driverReady = 0;
