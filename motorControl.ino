@@ -1,3 +1,4 @@
+#include "Depends/vars.h"
 void initializeMotorDriver()
 {
     driverReady = 1;
