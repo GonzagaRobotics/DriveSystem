@@ -31,5 +31,7 @@ void initializeMotorDriver()
 
 void motorDriver()
 {
-    Serial.print("TODO: Motors");
+    // TODO: Add motor driver code
+    // Cordinate with Damon on the best method for implementing this
+    // This is a placeholder
 }

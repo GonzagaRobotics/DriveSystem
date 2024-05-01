@@ -1,14 +1,16 @@
 #include <Arduino.h>
+#include <string.h>
 #include "Depends/vars.h"
 #include "Depends/functions.h"
 #include "motorFunctions.ino"
+#include "SerialCommandProcessor.ino"
 void setup()
 {
     Serial.begin(9600);
     Serial.print("Starting Motor Drive System... Please Wait.");
     do
     {
-        void initializeMotorDriver();
+        initializeMotorDriver();
 
     } while (driverReady != 1);
     if (driverReady == 1)
@@ -24,5 +26,13 @@ void setup()
 
 void loop()
 {
-    void motorDriver();
+    opperatingLoop();
+}
+
+void opperatingLoop()
+{
+    // Decode the incoming Command from ROS
+    decodeCommand();
+    // Use the serial command to drive the motors
+    motorDriver();
 }
