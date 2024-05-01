@@ -1,12 +1,16 @@
 #include <Arduino.h>
 #include "Depends/vars.h"
 #include "Depends/functions.h"
-#include "motorControl.cpp"
+#include "motorControl.ino"
 void setup()
 {
     Serial.begin(9600);
     Serial.print("Starting Motor Drive System... Please Wait.");
-    void initializeMotorDriver();
+    do
+    {
+        void initializeMotorDriver();
+
+    } while (driverReady != 1);
     if (driverReady == 1)
     {
         Serial.write("MOTOR_DRIVER_READY");
