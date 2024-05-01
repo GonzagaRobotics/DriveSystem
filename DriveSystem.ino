@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Depends/vars.h"
 #include "Depends/functions.h"
-#include "motorControl.ino"
+#include "motorFunctions.ino"
 void setup()
 {
     Serial.begin(9600);
