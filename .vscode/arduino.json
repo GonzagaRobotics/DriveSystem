@@ -1,6 +1,5 @@
 {
-    "configuration": "PartitionScheme=default,UploadSpeed=921600,DebugLevel=none,EraseFlash=none",
-    "board": "esp32:esp32:pico32",
+    "board": "arduino:avr:uno",
     "port": "/dev/ttyUSB0",
-    "sketch": "main.ino"
+    "sketch": "DriveSystem.ino"
 }
