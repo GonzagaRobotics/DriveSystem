@@ -6,20 +6,30 @@ void decodeCommand()
     Serial.readBytes(inputStream, MAX_BYTES);
     for (int i = 0; i < MAX_BYTES; i++)
     {
-        if (inputStream[i] == 'E')
+        if (inputStream[i] == 'E' && inputStream[i + 1] == 'N')
         {
+            // enable
+            enable = (((i + 2)) + (i + 3));
         }
-        if (inputStream[i] == 'F')
+        if (inputStream[i] == 'F' && inputStream[i + 1] == 'W')
         {
+            // forward
+            directionForward = (((i + 2)) + (i + 3));
         }
-        if (inputStream[i] == 'B')
+        if (inputStream[i] == 'B' && inputStream[i + 1] == 'W')
         {
+            // backward
+            directionBackward = (((i + 2)) + (i + 3));
         }
-        if (inputStream[i] == 'L')
+        if (inputStream[i] == '\0' && inputStream[i + 1] == 'L')
         {
+            // left
+            directionLeft = (((i + 2)) + (i + 3));
         }
-        if (inputStream[i] == 'R')
+        if (inputStream[i] == '\0' && inputStream[i + 1] == 'R')
         {
+            // right
+            directionRight = (((i + 2)) + (i + 3));
         }
     }
     // TODO: Add command decoding
