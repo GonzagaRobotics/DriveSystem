@@ -19,11 +19,11 @@ void initializeMotorDriver()
         pinMode(leftMotorGroup[i], OUTPUT);
         pinMode(rightMotorGroup[i], OUTPUT);
     }
-    // Set the motor pins to low
+    // Set the motor pins to 0
     for (int i = 0; i < 3; i++)
     {
-        digitalWrite(leftMotorGroup[i], LOW);
-        digitalWrite(rightMotorGroup[i], LOW);
+        analogWrite(leftMotorGroup[i], LOW);
+        analogWrite(rightMotorGroup[i], LOW);
     }
     // Set the driver ready flag to 1
     driverReady = 1;

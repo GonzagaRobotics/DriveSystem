@@ -1,13 +1,14 @@
 # Serial Commands
 ## Synopsis
 
-This Document outlines the standard format of ROS-MicroController communication
-The below is the standard scheme for formating your haxadecimcal properly.
+This Document outlines the standard format of ROS-MicroController communication.
+The system utilizes a specific number of bytes in each direction: ROS sends the controller 12 total bytes, While the controller sends 100 bytes. These numbers DO NOT CHANGE. (Makes the code easier :D)
+The below is the standard scheme for formating your haxadecimcal properly.the byte pattern
 
-
-| 0x                                    | 0                 | 0                 |
-| ------------------------------------- | ----------------- | ----------------- |
-| The standard starter. Dont change me! | The subsystem id. | Subsystem status. |
+### From ROS to the controller: 
+| 00  | 00  | 00  | 00  | 00  | 00  |
+| --- | --- | --- | --- | --- | --- |
+|     |
 
 ## Important Tidbits
 * The ID and status numbers can be a MAXIMUM of 2 digits. anymore and things WILL be ignored.
