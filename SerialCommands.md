@@ -1,27 +1,25 @@
 # Serial Commands
-## Synopsis
 
-This Document outlines the standard format of ROS-MicroController communication.
-The system utilizes a specific number of bytes in each direction: ROS sends the controller 12 total bytes, While the controller sends 100 bytes. These numbers DO NOT CHANGE. (Makes the code easier :D)
-The below is the standard scheme for formating your haxadecimcal properly.the byte pattern
+This Document outlines the standard format of ROS-Microcontroller communication.
 
-### From ROS to the controller: 
-| 00  | 00  | 00  | 00  | 00  | 00  |
-| --- | --- | --- | --- | --- | --- |
-|     |
+## Format
 
-## Important Tidbits
-* The ID and status numbers can be a MAXIMUM of 2 digits. anymore and things WILL be ignored.
-* Please use standard hexadecimal notation. The subsystem can't handle creative characters.
-* Please limit the number of commands per second to 10. Thanks
-* :D
+All data will be sent as bytes in a key-value format. The key is the first two bytes with the value
+being the next two bytes. We define the messages to always have the same length and order of key-value pairs.
 
+We interpret the key as ASCII text, and the value as a 16-bit unsigned integer. Keys may not contain any
+control characters, and may have a null first character (but the second character must be non-null).
 
-## Command Subsystems
+## Jetson to Microcontroller
 
+20 bytes are sent in the following format:
 
-| Subsystem ID | Subsystem name | Subsystem Status | Status in english     |
-| ------------ | -------------- | ---------------- | --------------------- |
-| 0            | Drive System   | 0                | Drive System Disabled |
-| 0            | Drive System   | 1                | Drive System Enabled  |
+| Key   | Value  | Description                                      |
+| ----- | ------ | ------------------------------------------------ |
+| `EN`  | 0 or 1 | Whether the drive system is enabled or disabled. |
+| `FW`  | 0-255  | Forward direction.                               |
+| `BW`  | 0-255  | Backward direction.                              |
+| `\0L` | 0-255  | Left direction.                                  |
+| `\0R` | 0-255  | Right direction.                                 |
 
+Note: If the forward value is non-zero, the backward value must be zero, and vice versa. The same applies to the left and right values. If both pairs are zero, the robot will stop.
