@@ -9,7 +9,7 @@ void decodeCommand()
         if (inputStream[i] == 'E' && inputStream[i + 1] == 'N')
         {
             // enable
-            enable = (((i + 2)) + (i + 3));
+            enable = true;
         }
         if (inputStream[i] == 'F' && inputStream[i + 1] == 'W')
         {
@@ -32,5 +32,3 @@ void decodeCommand()
             directionRight = (((i + 2)) + (i + 3));
         }
     }
-    // TODO: Add command decoding
-}

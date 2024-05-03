@@ -25,7 +25,7 @@ Forwards-Backwards
 Left-right
 
 */
-int enable = driverReady;
+bool enable = driverReady;
 int directionForward = 0;
 int directionBackward = 0;
 int directionLeft = 0;
