@@ -13,11 +13,11 @@ We interpret the key as ASCII text containing 2 uppercase letters, and the value
 
 12 bytes are sent in the following format:
 
-| Key  | Value           | Description                                           |
-| ---- | --------------- | ----------------------------------------------------- |
-| `EN` | 0 or 1          | Whether the drive system is enabled or disabled.      |
-| `FB` | -32767 to 32767 | Forard and backwards movement (representing -1 to 1). |
-| `LR` | -32767 to 32767 | Left and right movement (representing -1 to 1).       |
+| Key  | Value           | Description                                            |
+| ---- | --------------- | ------------------------------------------------------ |
+| `EN` | 0 or 1          | Whether the drive system is enabled or disabled.       |
+| `FB` | -32767 to 32767 | Forward and backwards movement (representing -1 to 1). |
+| `LR` | -32767 to 32767 | Left and right movement (representing -1 to 1).        |
 
 ## Microcontroller to Jetson
 
