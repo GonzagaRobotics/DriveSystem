@@ -2,8 +2,8 @@
 #include <string.h>
 #include "Depends/vars.h"
 #include "Depends/functions.h"
-#include "motorFunctions.ino"
-#include "SerialBridge.ino"
+#include "motorFunctions.h"
+#include "SerialBridge.h"
 void setup()
 {
     Serial.begin(9600);

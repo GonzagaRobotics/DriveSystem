@@ -30,4 +30,12 @@ int directionForward = 0;
 int directionBackward = 0;
 int directionLeft = 0;
 int directionRight = 0;
+
+// Motor Directions
+
+int motorDirection = 0;
+
+// note: This variable is the requested motor speed
+int moveLeftMotor;
+int moveRightMotor;
 #endif
