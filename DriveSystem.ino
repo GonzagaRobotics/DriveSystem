@@ -22,6 +22,10 @@ void setup()
         Serial.write("MOTOR_DRIVER_STARTING");
         delay(1500);
     }
+    if (driverError == 1)
+    {
+        Serial.write("The Motor Driver has errored.\n If you are seeing this message, Michael left DEBUGGING on. Please contact him.\n Damon: If you see this, BanHammer me.\n");
+    }
 }
 
 void loop()

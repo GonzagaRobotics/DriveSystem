@@ -1,6 +1,6 @@
 #ifndef VARS_H
 #define VARS_H
-
+int driverError = 0;
 int driverReady = 0;
 
 // Motor Groups
