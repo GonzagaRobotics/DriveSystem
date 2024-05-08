@@ -3,47 +3,13 @@
 
 void commandParser()
 {
-    if (outputStream[0] == 'F')
-    {
-        moveDirection = 1;
-        moveLeftMotor = 255;
-        moveRightMotor = 255;
-    }
-    else if (outputStream[0] == 'B')
-    {
-        moveDirection = -1;
-        moveLeftMotor = 255;
-        moveRightMotor = 255;
-    }
-    else if (outputStream[0] == 'L')
-    {
-        moveDirection = 2;
-        moveLeftMotor = 255;
-        moveRightMotor = 255;
-    }
-    else if (outputStream[0] == 'R')
-    {
-        moveDirection = -2;
-        moveLeftMotor = 255;
-        moveRightMotor = 255;
-    }
-    else if (outputStream[0] == 'S')
-    {
-        moveDirection = 0;
-        moveLeftMotor = 0;
-        moveRightMotor = 0;
-    }
-    else
-    {
-        moveDirection = 0;
-        moveLeftMotor = 0;
-        moveRightMotor = 0;
-    }
+    int moveLeftMotor = tempMotorSpeed;
+    int moveRightMotor = tempMotorSpeed;
 }
 void decodeCommand()
 {
-    Serial.readBytes(inputStream, MAX_BYTES);
-    // Convert Bytes to ASCII
+    // Serial.readBytes(inputStream, MAX_BYTES);
+    //  Convert Bytes to ASCII
     for (int i = 0; i < MAX_BYTES; i++)
     {
         outputStream[i] = char(inputStream[i]);
@@ -57,4 +23,5 @@ void decodeCommand()
         inputStream[i] = 0;
         outputStream[i] = 0;
     }
+    int tempMotorSpeed = Serial.read();
 }

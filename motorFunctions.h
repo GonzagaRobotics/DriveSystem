@@ -33,60 +33,9 @@ void motorDriver()
 {
     // CHANGEME
 
-    // SOME INDICATOR OF DIRECTION
-
-    if (moveDirection == 1)
-    {
-        // Move Forward
         for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], moveLeftMotor);
-            analogWrite(rightMotorGroup[i], moveRightMotor);
-        }
-    }
-    else if (moveDirection == -1)
     {
-        // Move Backward
-        for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], moveLeftMotor);
-            analogWrite(rightMotorGroup[i], moveRightMotor);
-        }
-    }
-    else if (moveDirection == 2)
-    {
-        // Move Left
-        for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], moveLeftMotor);
-            analogWrite(rightMotorGroup[i], moveRightMotor);
-        }
-    }
-    else if (moveDirection == -2)
-    {
-        // Move Right
-        for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], moveLeftMotor);
-            analogWrite(rightMotorGroup[i], moveRightMotor);
-        }
-    }
-    else if (moveDirection == 0)
-    {
-        // Stop
-        for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], 0);
-            analogWrite(rightMotorGroup[i], 0);
-        }
-    }
-    else
-    {
-        // Stop
-        for (int i = 0; i < 3; i++)
-        {
-            analogWrite(leftMotorGroup[i], 0);
-            analogWrite(rightMotorGroup[i], 0);
-        }
+        analogWrite(leftMotorGroup[i], moveLeftMotor);
+        analogWrite(rightMotorGroup[i], moveRightMotor);
     }
 }

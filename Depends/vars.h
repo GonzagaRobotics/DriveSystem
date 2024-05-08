@@ -40,4 +40,5 @@ int motorDirection = 0;
 int moveLeftMotor;
 int moveRightMotor;
 int moveDirection = 0;
+int tempMotorSpeed = 0;
 #endif
