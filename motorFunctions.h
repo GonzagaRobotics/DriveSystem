@@ -1,12 +1,12 @@
 #include "Depends/vars.h"
 void initializeMotorDriver()
 { // Define the motor pins
-    int motorFrontLeft = 1;
-    int motorCenterLeft = 2;
-    int motorBackLeft = 3;
-    int motorFrontRight = 4;
-    int motorCenterRight = 5;
-    int motorBackRight = 6;
+    int motorFrontLeft = 3;
+    int motorCenterLeft = 5;
+    int motorBackLeft = 6;
+    int motorFrontRight = 9;
+    int motorCenterRight = 10;
+    int motorBackRight = 11;
     // Create an array for the motor groups
     int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
     // and the same for the right
@@ -22,8 +22,8 @@ void initializeMotorDriver()
     // Set the motor pins to 0
     for (int i = 0; i < 3; i++)
     {
-        analogWrite(leftMotorGroup[i], LOW);
-        analogWrite(rightMotorGroup[i], LOW);
+        analogWrite(leftMotorGroup[i], 0);
+        analogWrite(rightMotorGroup[i], 0);
     }
     // Set the driver ready flag to 1
     driverReady = 1;
@@ -32,7 +32,7 @@ void initializeMotorDriver()
 void motorDriver()
 {
     // CHANGEME
-    int moveDirection = 0;
+
     // SOME INDICATOR OF DIRECTION
 
     if (moveDirection == 1)

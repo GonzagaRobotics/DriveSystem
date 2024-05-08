@@ -3,6 +3,7 @@
 #include "Depends/vars.h"
 #include "Depends/functions.h"
 #include "motorFunctions.h"
+#include "debugs.h"
 #include "SerialBridge.h"
 void setup()
 {
@@ -15,16 +16,16 @@ void setup()
     } while (driverReady != 1);
     if (driverReady == 1)
     {
-        Serial.write("MOTOR_DRIVER_READY");
+        Serial.print("MOTOR_DRIVER_READY");
     }
     else
     {
-        Serial.write("MOTOR_DRIVER_STARTING");
+        Serial.print("MOTOR_DRIVER_STARTING");
         delay(1500);
     }
     if (driverError == 1)
     {
-        Serial.write("The Motor Driver has errored.\n If you are seeing this message, Michael left DEBUGGING on. Please contact him.\n Damon: If you see this, BanHammer me.\n");
+        Serial.print("The Motor Driver has errored.\n If you are seeing this message, Michael left DEBUGGING on. Please contact him.\n Damon: If you see this, BanHammer me.\n");
     }
 }
 
@@ -35,6 +36,8 @@ void loop()
 
 void opperatingLoop()
 {
+    // DEBUG: TAKE SERIAL INPUT
+
     // Decode the incoming Command from ROS
     decodeCommand();
     // Use the serial command to drive the motors

@@ -18,4 +18,6 @@ Future Features:
 This system is licenced under the MIT licence.
 
 
+Note: The ArduinoNano (Our Microcontroller) has 6 PWM Pins: 3, 5, 6, 9, 10, 11
+
 See this document for information on specifics. [DriveSystem information](SerialCommands.md)

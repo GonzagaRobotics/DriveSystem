@@ -1,5 +1,6 @@
 {
-    "board": "arduino:avr:uno",
+    "board": "arduino:avr:nano",
     "port": "/dev/ttyUSB0",
-    "sketch": "DriveSystem.ino"
+    "sketch": "DriveSystem.ino",
+    "configuration": "cpu=atmega328"
 }

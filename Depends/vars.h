@@ -16,8 +16,9 @@ int leftMotorGroup[3];
 int rightMotorGroup[3];
 
 // Serial Stuff
-const int MAX_BYTES = 12;    // Defines the Maximum number of bytes to be read from the serial port
-char inputStream[MAX_BYTES]; // Defines the input stream for the serial port
+const int MAX_BYTES = 12;     // Defines the Maximum number of bytes to be read from the serial port
+char inputStream[MAX_BYTES];  // Defines the input stream for the serial port
+char outputStream[MAX_BYTES]; // Defines the output stream for the serial port
 // Variables for Subsystems
 /*
 Enable
@@ -38,4 +39,5 @@ int motorDirection = 0;
 // note: This variable is the requested motor speed
 int moveLeftMotor;
 int moveRightMotor;
+int moveDirection = 0;
 #endif
