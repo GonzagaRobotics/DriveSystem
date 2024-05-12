@@ -31,11 +31,51 @@ void initializeMotorDriver()
 
 void motorDriver()
 {
-    // CHANGEME
+    // We know the speed and direction. But, we need to seperate things out. First, we check to see
+    // If F/B or L/R equals 0
 
-        for (int i = 0; i < 3; i++)
+    if (motorSpeedFB == 0)
     {
-        analogWrite(leftMotorGroup[i], moveLeftMotor);
-        analogWrite(rightMotorGroup[i], moveRightMotor);
+        if (invertDirection == false)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                analogWrite(leftMotorGroup[i], motorSpeedLR);
+                analogWrite(rightMotorGroup[i], 0);
+            }
+        }
+        if (invertDirection == true)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                analogWrite(leftMotorGroup[i], 0);
+                analogWrite(rightMotorGroup[i], motorSpeedLR);
+            }
+        }
+    }
+    else
+    {
+        if (motorSpeedLR == 0)
+        {
+            if (invertDirection == false)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    analogWrite(leftMotorGroup[i], motorSpeedFB);
+                    analogWrite(rightMotorGroup[i], motorSpeedFB);
+                }
+            }
+            if (invertDirection == true)
+            {
+                // Remember how we un negatived that number?
+                // Well its negative again. Yeah.
+                motorSpeedFB = (motorSpeedFB * -1.0);
+                for (int i = 0; i < 3; i++)
+                {
+                    analogWrite(leftMotorGroup[i], motorSpeedFB);
+                    analogWrite(rightMotorGroup[i], motorSpeedFB);
+                }
+            }
+        }
     }
 }

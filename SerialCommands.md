@@ -8,6 +8,8 @@ All data will be sent as bytes in a key-value format. The key is the first two b
 being the next two bytes. We define the messages to always have the same length and order of key-value pairs.
 
 We interpret the key as ASCII text containing 2 uppercase letters, and the value as a 16-bit integers (signed or unsigned).
+The system recognizes positive speed values as "Normal" (Forward, Left) and negative values as "Reverse" (Backwards and Right)
+0 is stop (obviously)
 
 ## Jetson to Microcontroller
 
@@ -19,6 +21,7 @@ We interpret the key as ASCII text containing 2 uppercase letters, and the value
 | `FB` | -32767 to 32767 | Forward and backwards movement (representing -1 to 1). |
 | `LR` | -32767 to 32767 | Left and right movement (representing -1 to 1).        |
 
+Note: any corrupted movement data will result in a STOP command being issued. 
 ## Microcontroller to Jetson
 
 100 bytes are sent in the following format:

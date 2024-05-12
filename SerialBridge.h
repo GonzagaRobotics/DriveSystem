@@ -3,8 +3,66 @@
 
 void commandParser()
 {
-    int moveLeftMotor = tempMotorSpeed;
-    int moveRightMotor = tempMotorSpeed;
+    // We recieve 12 bytes from the serial port
+    // The data is split into 4 byte chunks. The first 2 bytes of each chunk
+    // are the key, the last 2 bytes are the value
+
+    // The key is a 2 char that represents the command
+
+    // Split the 12 bytes into strings, with the split occuring every 4 bytes
+    //  Split the array into 4 byte strings
+    char key[2];
+    char value[2];
+    for (int i = 0; i < 12; i += 4)
+    {
+        // Split the array into 4 byte strings
+        key[0] = outputStream[i];
+        key[1] = outputStream[i + 1];
+        value[0] = outputStream[i + 2];
+        value[1] = outputStream[i + 3];
+        // Convert the value to an integer
+        int valueInt = atoi(value);
+        // Check the key and set the value
+        if (strcmp(key, "EN") == 0)
+        {
+            if (valueInt == 1)
+            {
+                enable = 1;
+            }
+            else
+            {
+                enable = 0;
+            }
+        }
+        else
+        {
+            // If The key is NOT EN, we know that we are sending direction commands
+            // Therefore, we need to od math (ew)
+
+            // Convert the 32some thousand to a better number
+            // To make my lfe easier, I convert everything to positive values (im a lazy bastard)
+            if (valueInt < 0)
+            {
+                valueInt = (valueInt * -1.0);
+                invertDirection = true;
+            }
+
+            // Time for MORE MATH! Yay!
+            // Here we divide by 256 to do magic happiness
+            valueInt = (valueInt / 256.0);
+
+            if (strcmp(key, "FB") == 0)
+            {
+                Serial.print("FB");
+                motorSpeedFB = valueInt;
+            }
+            else if (strcmp(key, "LR") == 0)
+            {
+                Serial.print("LR");
+                motorSpeedLR = valueInt;
+            }
+        }
+    }
 }
 void decodeCommand()
 {
@@ -23,5 +81,4 @@ void decodeCommand()
         inputStream[i] = 0;
         outputStream[i] = 0;
     }
-    int tempMotorSpeed = Serial.read();
 }
