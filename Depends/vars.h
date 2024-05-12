@@ -1,3 +1,4 @@
+
 #ifndef VARS_H
 #define VARS_H
 int driverError = 0;
@@ -33,8 +34,16 @@ bool enable = driverReady;
 int motorDirection = 0;
 
 // note: This variable is the requested motor speed
-int moveLeftMotor;
-int moveRightMotor;
+int frontLeftDP, frontRightDP, centerLeftDP, centerRightDP, rearLeftDP, rearRightDP;
+int frontLeftAP, frontRightAP, centerLeftAP, centerRightAP, rearLeftAP, rearRightAP;
+int frontLeftRPM, frontRightRPM, centerLeftRPM, centerRightRPM, rearLeftRPM, rearRightRPM;
+int frontLeftTC, frontRightTC, centerLeftTC, centerRightTC, rearLeftTC, rearRightTC;
 int motorSpeedFB, motorSpeedLR;
 bool invertDirection;
+
+// Comand stuff
+String ROSString;
+String Enable;
+String EnableStatus;
+String EN, FL, FR, CL, CR, RL, RR;
 #endif

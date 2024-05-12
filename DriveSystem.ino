@@ -36,10 +36,11 @@ void loop()
 
 void opperatingLoop()
 {
-    // DEBUG: TAKE SERIAL INPUT
-
     // Decode the incoming Command from ROS
     decodeCommand();
     // Use the serial command to drive the motors
     motorDriver();
+    // Report back to ROS
+    serialBuilder();
+    sendSerialToROS();
 }

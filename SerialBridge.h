@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <string.h>
 #include "Depends/vars.h"
 
 void commandParser()
@@ -81,4 +82,20 @@ void decodeCommand()
         inputStream[i] = 0;
         outputStream[i] = 0;
     }
+}
+
+void serialBuilder()
+{
+    int enableStatus = enable;
+    String EN = ("EN" + String(enableStatus));
+    String FL = ("DP" + String(frontLeftDP) + "AP" + String(frontLeftAP) + "CR" + String(frontLeftRPM) + "CA" + String(frontLeftTC));
+    String FR = ("DP" + String(frontRightDP) + "AP" + String(frontRightAP) + "CR" + String(frontRightRPM) + "CA" + String(frontRightTC));
+    String CL = ("DP" + String(centerLeftDP) + "AP" + String(centerLeftAP) + "CR" + String(centerLeftRPM) + "CA" + String(centerLeftTC));
+    String CR = ("DP" + String(centerRightDP) + "AP" + String(centerRightAP) + "CR" + String(centerRightRPM) + "CA" + String(centerRightTC));
+    String RL = ("DP" + String(rearLeftDP) + "AP" + String(rearLeftAP) + "CR" + String(rearLeftRPM) + "CA" + String(rearLeftTC));
+    String RR = ("DP" + String(rearRightDP) + "AP" + String(rearRightAP) + "CR" + String(rearRightRPM) + "CA" + String(rearRightTC));
+}
+void sendSerialToROS()
+{
+    String ROSString = (EN + "FL" + FL + "FR" + FR + "CL" + CL + "CR" + CR + "RL" + RL + "RR" + RR);
 }
