@@ -11,8 +11,6 @@ void initializeMotorDriver()
     int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
     // and the same for the right
     int rightMotorGroup[3] = {motorFrontRight, motorCenterRight, motorBackRight};
-    // TODO: CHANGE PIN NUMBERS
-
     // Set the motor pins to output
     for (int i = 0; i < 3; i++)
     {

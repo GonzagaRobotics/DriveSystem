@@ -8,7 +8,7 @@
 void setup()
 {
     Serial.begin(9600);
-    Serial.print("Starting Motor Drive System... Please Wait.");
+    Serial.println("Starting Motor Drive System... Please Wait.");
     do
     {
         initializeMotorDriver();
@@ -16,16 +16,13 @@ void setup()
     } while (driverReady != 1);
     if (driverReady == 1)
     {
-        Serial.print("MOTOR_DRIVER_READY");
+        Serial.println("MOTOR_DRIVER_READY");
     }
     else
     {
-        Serial.print("MOTOR_DRIVER_STARTING");
+        Serial.println("MOTOR_DRIVER_STARTING");
         delay(1500);
-    }
-    if (driverError == 1)
-    {
-        Serial.print("The Motor Driver has errored.\n If you are seeing this message, Michael left DEBUGGING on. Please contact him.\n Damon: If you see this, BanHammer me.\n");
+        initializeMotorDriver();
     }
 }
 
