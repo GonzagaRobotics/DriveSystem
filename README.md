@@ -1,7 +1,7 @@
 # DriveSystem
 
 
-## This program is a complete rewrite of the previous MicroROS drive system. Currently in Open Alpha
+## This program is a complete rewrite of the previous MicroROS drive system.
 
 
 Version 1 "Rosemary"
