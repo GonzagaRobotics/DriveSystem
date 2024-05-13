@@ -38,7 +38,7 @@ void commandParser()
         else
         {
             // If The key is NOT EN, we know that we are sending direction commands
-            // Therefore, we need to od math (ew)
+            // Therefore, we need to do math (ew)
 
             // Convert the 32some thousand to a better number
             // To make my lfe easier, I convert everything to positive values (im a lazy bastard)

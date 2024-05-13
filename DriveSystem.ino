@@ -21,7 +21,6 @@ void setup()
     {
         Serial.println("MOTOR_DRIVER_STARTING");
         delay(1500);
-        initializeMotorDriver();
     }
 }
 

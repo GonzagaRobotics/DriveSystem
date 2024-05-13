@@ -32,6 +32,7 @@ void motorDriver()
     // We know the speed and direction. But, we need to seperate things out. First, we check to see
     // If F/B or L/R equals 0
 
+    // Left/Right
     if (motorSpeedFB == 0)
     {
         if (invertDirection == false)
@@ -53,6 +54,7 @@ void motorDriver()
     }
     else
     {
+        // Forward-Backwards
         if (motorSpeedLR == 0)
         {
             if (invertDirection == false)
