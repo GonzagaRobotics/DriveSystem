@@ -67,7 +67,7 @@ void commandParser()
 }
 void decodeCommand()
 {
-    // Serial.readBytes(inputStream, MAX_BYTES);
+    Serial.readBytes(inputStream, MAX_BYTES);
     //  Convert Bytes to ASCII
     for (int i = 0; i < MAX_BYTES; i++)
     {
