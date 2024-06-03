@@ -35,6 +35,7 @@ void motorDriver()
     // Left/Right
     if (motorSpeedFB == 0)
     {
+        // If the FB value is 0, that means we are addressing L/R Movement
         if (invertDirection == false)
         {
             for (int i = 0; i < 3; i++)
