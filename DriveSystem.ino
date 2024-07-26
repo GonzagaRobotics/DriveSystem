@@ -7,7 +7,7 @@
 void setup()
 {
     Serial.begin(9600);
-    Serial.println("Starting Motor Drive System... Please Wait.");
+    Serial.println("STARTING_PLEASE_WAIT");
     do
     {
         initializeMotorDriver();
