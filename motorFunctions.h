@@ -7,6 +7,24 @@ void initializeMotorDriver()
     int motorFrontRight = 9;
     int motorCenterRight = 10;
     int motorBackRight = 11;
+
+    /*
+    Replace with actual pin values
+    */
+    int inputFrontLeft = 3;
+    int inputCenterLeft = 5;
+    int inputBackLeft = 6;
+    int inputFrontRight = 9;
+    int inputCenterRight = 10;
+    int inputBackRight = 11;
+
+    pinMode(inputFrontLeft, INPUT);
+    pinMode(inputCenterLeft, INPUT);
+    pinMode(inputBackLeft, INPUT);
+    pinMode(inputFrontRight, INPUT);
+    pinMode(inputCenterRight, INPUT);
+    pinMode(inputBackRight, INPUT);
+
     // Create an array for the motor groups
     int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
     // and the same for the right
@@ -25,6 +43,10 @@ void initializeMotorDriver()
     }
     // Set the driver ready flag to 1
     driverReady = 1;
+}
+
+void speedCheck(){
+    
 }
 
 void motorDriver()
