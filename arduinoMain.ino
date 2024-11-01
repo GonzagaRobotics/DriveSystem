@@ -1,3 +1,16 @@
+//To Do
+/*
+1. add traction toggle 
+2. add pwm signal recognition (6 magnets per RPM) https://www.sparkfun.com/products/9312
+3. add timer calculate speed based on RPM
+4. Split into multiple finals
+5. Fix values for the motors tallon SRX ensure speed runs right
+
+
+
+*/
+
+
 #include <Arduino.h>
 
 // Motor pins
@@ -98,4 +111,5 @@ void motorStop() { //Stops the Motor
 
 void trackCntrl() {
   // Placeholder for traction control code
+  //
 }
