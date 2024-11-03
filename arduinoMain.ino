@@ -1,10 +1,11 @@
 //To Do
 /*
 1. add traction toggle 
-2. add pwm signal recognition (6 magnets per RPM) https://www.sparkfun.com/products/9312
-3. add timer calculate speed based on RPM
-4. Split into multiple finals
+2. 
+3. Test and fix encoder Read Function
+4. Split into multiple files
 5. Fix values for the motors tallon SRX ensure speed runs right
+    Might be -1 to 1
 
 
 
@@ -28,6 +29,24 @@ int rightMotorGroup[3] = {motorFrontRight, motorCenterRight, motorBackRight};
 // Speeds
 int speedFB = 0; // Forward/Backward speed (-255 to 255)
 int speedLR = 0; // Left/Right speed (-255 to 255)
+double speedMph;
+double wheelCircumphrence=8; //Inches
+
+
+int motorFrontLeftEncoder = 3;
+int motorCenterLeftEncoder = 5;
+int motorBackLeftEncoder = 6;
+int motorFrontRightEncoder = 9;
+int motorCenterRightEncoder = 10;
+int motorBackRightEncoder = 11;
+
+pinMode(motorFrontLeftEncoder, INPUT);
+pinMode(motorCenterLeftEncoder, INPUT);
+pinMode(motorBackLeftEncoder, INPUT);
+pinMode(motorFrontRightEncoder, INPUT);
+pinMode(motorCenterRightEncoder, INPUT);
+pinMode(motorBackRightEncoder, INPUT);
+
 
 void setup() {
   Serial.begin(9600);
@@ -112,4 +131,34 @@ void motorStop() { //Stops the Motor
 void trackCntrl() {
   // Placeholder for traction control code
   //
+
+}
+
+/*
+Untested module
+Test on one moror encoder with button later
+implement For loop and average out individual Moror speeds for more acurate overall speed value
+Test with one before implementing
+*/
+void encodeReading(){//UNTESTED Only works for one Moror so far
+  int encoderState=0;
+  encoderState= digitalRead(motorFrontLeftEncoder);
+  double speedMph;
+  double startTime=0;
+  double endTime;
+  double time;
+  double rpmTime;
+  while(encoderState!=1){ //Fix this test with arduino
+    encoderState= digitalRead(motorFrontLeftEncoder);
+  }
+  read[i]=millis();
+  StartTime=millis();
+  delay(1); // test dellay
+  while(encoderState!=1){
+    encoderState= digitalRead(motorFrontLeftEncoder);
+  }
+  endTime=millis();
+  time=endTime-startTime;
+  rpmTime=time*6;
+  speedMph= (rpmTime*(63360/wheelCircumphrence))*(3600000);
 }
