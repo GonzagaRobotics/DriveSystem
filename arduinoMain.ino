@@ -1,13 +1,9 @@
 //To Do
 /*
-1. Test encoder module
-2. Update python test code to test other modules
-3. basic imlementation of trac contorl
-
-
+1. basic imlementation of trac contorl
 
 */
-#include "init.h"
+
 
 
 #include <Arduino.h>
@@ -33,20 +29,12 @@ double speedMph;
 double wheelCircumphrence=8; //Inches
 
 
-int motorFrontLeftEncoder = 3;
-int motorCenterLeftEncoder = 5;
-int motorBackLeftEncoder = 6;
-int motorFrontRightEncoder = 9;
-int motorCenterRightEncoder = 10;
-int motorBackRightEncoder = 11;
-
-pinMode(motorFrontLeftEncoder, INPUT);
-pinMode(motorCenterLeftEncoder, INPUT);
-pinMode(motorBackLeftEncoder, INPUT);
-pinMode(motorFrontRightEncoder, INPUT);
-pinMode(motorCenterRightEncoder, INPUT);
-pinMode(motorBackRightEncoder, INPUT);
-
+volatile int motorFrontLeftEncoder = 3;
+volatile int motorCenterLeftEncoder = 5;
+volatile int motorBackLeftEncoder = 6;
+volatile int motorFrontRightEncoder = 9;
+volatile int motorCenterRightEncoder = 10;
+volatile int motorBackRightEncoder = 11;
 
 void setup() {
   Serial.begin(9600);
@@ -55,6 +43,22 @@ void setup() {
   for (int i = 0; i < 3; i++) {
     pinMode(leftMotorGroup[i], OUTPUT);
     pinMode(rightMotorGroup[i], OUTPUT);
+    pinMode(motorFrontLeftEncoder, INPUT);
+    pinMode(motorCenterLeftEncoder, INPUT);
+    pinMode(motorBackLeftEncoder, INPUT);
+    pinMode(motorFrontRightEncoder, INPUT);
+    pinMode(motorCenterRightEncoder, INPUT);
+    pinMode(motorBackRightEncoder, INPUT);
+
+    // Testing with Interupts, disregard
+    //attachInterrupt(digitalPinToInterrupt(motorFrontLeftEncoder), encodeReading, RISING);
+    //attachInterrupt(digitalPinToInterrupt(motorCenterLeftEncoder), centerLeftEncoderISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(motorBackLeftEncoder), backLeftEncoderISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(motorFrontRightEncoder), frontRightEncoderISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(motorCenterRightEncoder), centerRightEncoderISR, RISING);
+    //attachInterrupt(digitalPinToInterrupt(motorBackRightEncoder), backRightEncoderISR, RISING);
+
+
   }
 
   // Wait for the serial connection to initialize
@@ -64,12 +68,14 @@ void setup() {
 }
 
 void loop() {
+  encodeReading();
   if (Serial.available() > 0) {
     // Read the incoming command
     String input = Serial.readStringUntil('\n');  // Read until newline
 
     parseCommand(input);
     motorUpdate(speedFB, speedLR);
+    
   }
 }
 
@@ -148,31 +154,67 @@ void trackCntrl() {
 
 }
 
+//Tested and working
 /*
-Untested module
-Test on one moror encoder with button later
-implement For loop and average out individual Moror speeds for more acurate overall speed value
-Test with one before implementing
+clock and encoder can make mistakes hense the pervious speed array,
+function compares against the average previous speed to disregard any outliers, may need to tweek based on
+rover speed and encoder percision
+
+may need to tweek MPH calculation.
+
 */
-void encodeReading(){//UNTESTED Only works for one Moror so far
-  int encoderState=0;
-  encoderState= digitalRead(motorFrontLeftEncoder);
-  double speedMph;
-  double startTime=0;
-  double endTime;
-  double time;
-  double rpmTime;
-  while(encoderState!=1){ //Fix this test with arduino
-    encoderState= digitalRead(motorFrontLeftEncoder);
+void encodeReading() { 
+
+  double sumSpeeds=0;
+  int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
+  //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder };
+  double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
+  int counter=0;
+  if(counter>=6){
+    counter=0;
   }
-  read[i]=millis();
-  StartTime=millis();
-  delay(1); // test dellay
-  while(encoderState!=1){
-    encoderState= digitalRead(motorFrontLeftEncoder);
+
+  int i=0;
+  while(i<6){
+    int previousState = 0;
+    int currentState = digitalRead(encoderArray[i]);
+
+    while (currentState == previousState) {
+      currentState = digitalRead(encoderArray[i]);
+    }
+    previousState = currentState;
+    double startTime = millis();
+    while (currentState == previousState) {
+      currentState = digitalRead(encoderArray[i]);
+    }
+    previousState = currentState;
+
+    while (currentState == previousState) {
+      currentState = digitalRead(encoderArray[i]);
+    }
+    double endTime = millis();
+    double time = endTime - startTime; 
+    double rpmTime = (1000.0 / time) * 60.0; 
+    if (time > 0.1) { 
+      double rpmTime = (1000.0 / time) * 60.0; 
+      double currentSpeed = (rpmTime * (wheelCircumphrence / 12.0)) * 0.0568182;
+      sumSpeeds += currentSpeed; 
+      i++;
+    } else {
+      Serial.println("Warning: Time measurement is too short or zero. Skipping calculation.");
+    }
   }
-  endTime=millis();
-  time=endTime-startTime;
-  rpmTime=time*6;
-  speedMph= (rpmTime*(63360/wheelCircumphrence))*(3600000);
+  int perviousSpeed=0;
+  for(int i=0; i<6; i++){
+    perviousSpeed+=previousSpeeds[i];
+  }
+  perviousSpeed=perviousSpeed/6;
+  if((sumSpeeds/6)>(perviousSpeed+30)){
+    Serial.println("InvalidSpeed" + String((sumSpeeds/6), 2));
+  }else{
+    speedMph=sumSpeeds/6; //Average MPH speed of Rover
+    previousSpeeds[counter]=speedMph;
+  }
+  Serial.println("Current Speed is: " + String(speedMph, 2));
+  
 }
