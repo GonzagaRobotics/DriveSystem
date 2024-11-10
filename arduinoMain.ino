@@ -1,10 +1,14 @@
 //To Do
 /*
 Encoding works but in transitioning the motors to be a positive to negative range motor commands broke
-1. fix motor commands
+1. fix motor commands: issues with negative positive values, range calculation, conversion
 2. Find out expected max speed of motor to determiine optimal buffer to determine invalid values.
 2. Begin implementing Track controll 
+3. fix global variables
+4. fix edges/speed calculation
+5. Integrate with hall effect sensor 
 
+change to trac cntrl code; i.e. compare rover speed to motor speed
 */
 
 
@@ -31,6 +35,7 @@ int trakEnable=0;
 double speedMph;
 double wheelCircumphrence=8; //Inches
 double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
+double individualMotorSpeeds[6]={0,0,0,0,0,0}
 int counter=0;
 
 volatile int motorFrontLeftEncoder = 3;
@@ -84,7 +89,7 @@ void loop() {
 }
 
 void parseCommand(String input) { //Pulls out the forard speed and left right speed 
-  // Expected input format: "FB:100 LR:-50 EN:1"   (At the moment EN reffers to traction Control only)
+  // Expected input format: "FB:100 LR:50 EN:1"   (At the moment EN reffers to traction Control only)
 
   int fbIndex = input.indexOf("FB:");
   int lrIndex = input.indexOf("LR:");
@@ -93,21 +98,21 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
   if (fbIndex != -1) {
     int fbEnd = input.indexOf(' ', fbIndex);
     if (fbEnd == -1) fbEnd = input.length();
-    String fbValue = input.substring(fbIndex + 4, fbEnd);
+    String fbValue = input.substring(fbIndex + 3, fbEnd);
     speedFB = fbValue.toInt();
   }
 
   if (lrIndex != -1) {
     int lrEnd = input.indexOf(' ', lrIndex);
     if (lrEnd == -1) lrEnd = input.length();
-    String lrValue = input.substring(lrIndex + 4, lrEnd); //Check if +4 is the correct value
+    String lrValue = input.substring(lrIndex + 3, lrEnd); //Check if +4 is the correct value
     speedLR = lrValue.toInt();
   }
 
   if (enIndex != -1) {
     int enEnd = input.indexOf(' ', enIndex);
     if (enEnd == -1) enEnd = input.length();
-    String enValue = input.substring(enIndex + 4, enEnd);
+    String enValue = input.substring(enIndex + 3, enEnd);
     trakEnable = enValue.toInt();
   }
 
@@ -117,11 +122,11 @@ void motorUpdate(int speedFB, int speedLR) {
   double leftSpeed = speedFB + speedLR;
   double rightSpeed = speedFB - speedLR;
 
-  // Constrain speeds to valid PWM range (-100 to 100)
-  leftSpeed = constrain(leftSpeed, -100, 100);
-  rightSpeed = constrain(rightSpeed, -100, 100);
+  // Constrain speeds to valid PWM range (0 to 200)
+  leftSpeed = constrain(leftSpeed, 0, 200);
+  rightSpeed = constrain(rightSpeed, 0, 200);
   leftSpeed=1/leftSpeed;
-  rightSpeed=1/rightSpeed;
+  rightSpeed=1/rightSpeed; 
   // Set motor speeds
   setMotorSpeed(leftMotorGroup, leftSpeed);
   setMotorSpeed(rightMotorGroup, rightSpeed);
@@ -169,10 +174,10 @@ may need to tweek MPH calculation.
 
 */
 void encodeReading() { 
+  int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
   bool repeat=false;
   while(repeat==true){
     double sumSpeeds=0;
-    int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
     //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder };
     if(counter>=6){
       counter=0;
@@ -202,6 +207,7 @@ void encodeReading() {
       if (time > 0.1) { 
         double rpmTime = (1000.0 / time) * 60.0; 
         double currentSpeed = (rpmTime * (wheelCircumphrence / 12.0)) * 0.0568182;
+        individualMotorSpeeds[i]=currentSpeed;
         sumSpeeds += currentSpeed; 
         i++;
       } else {
