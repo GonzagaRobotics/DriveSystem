@@ -136,7 +136,7 @@ class ArduinoTester:
 
 def main():
     # Replace 'COM3' with the correct port for your system
-    port = 'COM3'  # For Windows, e.g., 'COM3'; For Unix, e.g., '/dev/ttyACM0'
+    port = 'COM'  # For Windows, e.g., 'COM3'; For Unix, e.g., '/dev/ttyACM0'
     tester = ArduinoTester(port=port)
 
     try:
