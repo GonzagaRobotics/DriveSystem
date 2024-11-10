@@ -29,7 +29,8 @@ int speedLR = 0; // Left/Right speed (-100 to 100)
 int trakEnable=0;
 double speedMph;
 double wheelCircumphrence=8; //Inches
-
+double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
+int counter=0;
 
 volatile int motorFrontLeftEncoder = 3;
 volatile int motorCenterLeftEncoder = 5;
@@ -164,59 +165,61 @@ rover speed and encoder percision
 
 may need to tweek MPH calculation.
 
+
 */
 void encodeReading() { 
-
-  double sumSpeeds=0;
-  int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
-  //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder };
-  double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
-  int counter=0;
-  if(counter>=6){
-    counter=0;
-  }
-
-  int i=0;
-  while(i<6){
-    int previousState = 0;
-    int currentState = digitalRead(encoderArray[i]);
-
-    while (currentState == previousState) {
-      currentState = digitalRead(encoderArray[i]);
+  bool repeat=false;
+  while(repeat==true){
+    double sumSpeeds=0;
+    int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
+    //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder };
+    if(counter>=6){
+      counter=0;
     }
-    previousState = currentState;
-    double startTime = millis();
-    while (currentState == previousState) {
-      currentState = digitalRead(encoderArray[i]);
-    }
-    previousState = currentState;
 
-    while (currentState == previousState) {
-      currentState = digitalRead(encoderArray[i]);
-    }
-    double endTime = millis();
-    double time = endTime - startTime; 
-    double rpmTime = (1000.0 / time) * 60.0; 
-    if (time > 0.1) { 
+    int i=0;
+    while(i<6){
+      int previousState = 0;
+      int currentState = digitalRead(encoderArray[i]);
+
+      while (currentState == previousState) {
+        currentState = digitalRead(encoderArray[i]);
+      }
+      previousState = currentState;
+      double startTime = millis();
+      while (currentState == previousState) {
+        currentState = digitalRead(encoderArray[i]);
+      }
+      previousState = currentState;
+
+      while (currentState == previousState) {
+        currentState = digitalRead(encoderArray[i]);
+      }
+      double endTime = millis();
+      double time = endTime - startTime; 
       double rpmTime = (1000.0 / time) * 60.0; 
-      double currentSpeed = (rpmTime * (wheelCircumphrence / 12.0)) * 0.0568182;
-      sumSpeeds += currentSpeed; 
-      i++;
-    } else {
-      Serial.println("Warning: Time measurement is too short or zero. Skipping calculation.");
+      if (time > 0.1) { 
+        double rpmTime = (1000.0 / time) * 60.0; 
+        double currentSpeed = (rpmTime * (wheelCircumphrence / 12.0)) * 0.0568182;
+        sumSpeeds += currentSpeed; 
+        i++;
+      } else {
+        Serial.println("Warning: Time measurement is too short or zero. Skipping calculation.");
+      }
     }
-  }
-  int perviousSpeed=0;
-  for(int i=0; i<6; i++){
-    perviousSpeed+=previousSpeeds[i];
-  }
-  perviousSpeed=perviousSpeed/6;
-  if((sumSpeeds/6)>(perviousSpeed+30)){
-    Serial.println("InvalidSpeed" + String((sumSpeeds/6), 2));
-  }else{
-    speedMph=sumSpeeds/6; //Average MPH speed of Rover
-    previousSpeeds[counter]=speedMph;
+    int perviousSpeed=0;
+    for(int i=0; i<6; i++){
+      perviousSpeed+=previousSpeeds[i];
+    }
+    perviousSpeed=perviousSpeed/6;
+    if((sumSpeeds/6)>(perviousSpeed+30)){
+      Serial.println("InvalidSpeed" + String((sumSpeeds/6), 2));
+      repeat=true;
+    }else{
+      repeat=false;
+      speedMph=sumSpeeds/6; //Average MPH speed of Rover
+      previousSpeeds[counter]=speedMph;
+    }
   }
   Serial.println("Current Speed is: " + String(speedMph, 2));
-  
 }
