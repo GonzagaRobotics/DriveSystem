@@ -2,6 +2,7 @@
 /*
 Encoding works but in transitioning the motors to be a positive to negative range motor commands broke
 1. fix motor commands
+2. Find out expected max speed of motor to determiine optimal buffer to determine invalid values.
 2. Begin implementing Track controll 
 
 */
