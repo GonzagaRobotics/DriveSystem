@@ -1,17 +1,17 @@
 //To Do
 /*
-1. add traction toggle 
-2. add pwm signal recognition (6 magnets per RPM) https://www.sparkfun.com/products/9312
-3. add timer calculate speed based on RPM
-4. Split into multiple finals
-5. Fix values for the motors tallon SRX ensure speed runs right
+1. Test encoder module
+2. Update python test code to test other modules
+3. basic imlementation of trac contorl
 
 
 
 */
+#include "init.h"
 
 
 #include <Arduino.h>
+
 
 // Motor pins
 int motorFrontLeft = 3;
@@ -26,8 +26,27 @@ int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
 int rightMotorGroup[3] = {motorFrontRight, motorCenterRight, motorBackRight};
 
 // Speeds
-int speedFB = 0; // Forward/Backward speed (-255 to 255)
-int speedLR = 0; // Left/Right speed (-255 to 255)
+int speedFB = 0; // Forward/Backward speed (-100 to 100)
+int speedLR = 0; // Left/Right speed (-100 to 100)
+int trakEnable=0;
+double speedMph;
+double wheelCircumphrence=8; //Inches
+
+
+int motorFrontLeftEncoder = 3;
+int motorCenterLeftEncoder = 5;
+int motorBackLeftEncoder = 6;
+int motorFrontRightEncoder = 9;
+int motorCenterRightEncoder = 10;
+int motorBackRightEncoder = 11;
+
+pinMode(motorFrontLeftEncoder, INPUT);
+pinMode(motorCenterLeftEncoder, INPUT);
+pinMode(motorBackLeftEncoder, INPUT);
+pinMode(motorFrontRightEncoder, INPUT);
+pinMode(motorCenterRightEncoder, INPUT);
+pinMode(motorBackRightEncoder, INPUT);
+
 
 void setup() {
   Serial.begin(9600);
@@ -55,9 +74,11 @@ void loop() {
 }
 
 void parseCommand(String input) { //Pulls out the forard speed and left right speed 
-  // Expected input format: "FB:100 LR:-50"
+  // Expected input format: "FB:100 LR:-50 EN:1"   (At the moment EN reffers to traction Control only)
+
   int fbIndex = input.indexOf("FB:");
   int lrIndex = input.indexOf("LR:");
+  int enIndex = input.indexOf("EN:");
 
   if (fbIndex != -1) {
     int fbEnd = input.indexOf(' ', fbIndex);
@@ -72,16 +93,25 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
     String lrValue = input.substring(lrIndex + 3, lrEnd);
     speedLR = lrValue.toInt();
   }
+
+  if (enIndex != -1) {
+    int enEnd = input.indexOf(' ', enIndex);
+    if (enEnd == -1) enEnd = input.length();
+    String enValue = input.substring(enIndex + 3, enEnd);
+    trakEnable = enValue.toInt();
+  }
+
 } 
 
 void motorUpdate(int speedFB, int speedLR) {
-  int leftSpeed = speedFB + speedLR;
-  int rightSpeed = speedFB - speedLR;
+  double leftSpeed = speedFB + speedLR;
+  double rightSpeed = speedFB - speedLR;
 
-  // Constrain speeds to valid PWM range (-255 to 255)
-  leftSpeed = constrain(leftSpeed, -255, 255);
-  rightSpeed = constrain(rightSpeed, -255, 255);
-
+  // Constrain speeds to valid PWM range (-100 to 100)
+  leftSpeed = constrain(leftSpeed, -100, 100);
+  rightSpeed = constrain(rightSpeed, -100, 100);
+  leftSpeed=1/leftSpeed;
+  rightSpeed=1/rightSpeed;
   // Set motor speeds
   setMotorSpeed(leftMotorGroup, leftSpeed);
   setMotorSpeed(rightMotorGroup, rightSpeed);
@@ -110,6 +140,39 @@ void motorStop() { //Stops the Motor
 }
 
 void trackCntrl() {
+  if(trackCntrl!=1){
+    return 0;
+  }
   // Placeholder for traction control code
   //
+
+}
+
+/*
+Untested module
+Test on one moror encoder with button later
+implement For loop and average out individual Moror speeds for more acurate overall speed value
+Test with one before implementing
+*/
+void encodeReading(){//UNTESTED Only works for one Moror so far
+  int encoderState=0;
+  encoderState= digitalRead(motorFrontLeftEncoder);
+  double speedMph;
+  double startTime=0;
+  double endTime;
+  double time;
+  double rpmTime;
+  while(encoderState!=1){ //Fix this test with arduino
+    encoderState= digitalRead(motorFrontLeftEncoder);
+  }
+  read[i]=millis();
+  StartTime=millis();
+  delay(1); // test dellay
+  while(encoderState!=1){
+    encoderState= digitalRead(motorFrontLeftEncoder);
+  }
+  endTime=millis();
+  time=endTime-startTime;
+  rpmTime=time*6;
+  speedMph= (rpmTime*(63360/wheelCircumphrence))*(3600000);
 }
