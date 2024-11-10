@@ -93,21 +93,21 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
   if (fbIndex != -1) {
     int fbEnd = input.indexOf(' ', fbIndex);
     if (fbEnd == -1) fbEnd = input.length();
-    String fbValue = input.substring(fbIndex + 3, fbEnd);
+    String fbValue = input.substring(fbIndex + 4, fbEnd);
     speedFB = fbValue.toInt();
   }
 
   if (lrIndex != -1) {
     int lrEnd = input.indexOf(' ', lrIndex);
     if (lrEnd == -1) lrEnd = input.length();
-    String lrValue = input.substring(lrIndex + 3, lrEnd);
+    String lrValue = input.substring(lrIndex + 4, lrEnd); //Check if +4 is the correct value
     speedLR = lrValue.toInt();
   }
 
   if (enIndex != -1) {
     int enEnd = input.indexOf(' ', enIndex);
     if (enEnd == -1) enEnd = input.length();
-    String enValue = input.substring(enIndex + 3, enEnd);
+    String enValue = input.substring(enIndex + 4, enEnd);
     trakEnable = enValue.toInt();
   }
 
