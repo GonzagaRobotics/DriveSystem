@@ -1,6 +1,8 @@
 //To Do
 /*
-1. basic imlementation of trac contorl
+Encoding works but in transitioning the motors to be a positive to negative range motor commands broke
+1. fix motor commands
+2. Begin implementing Track controll 
 
 */
 
