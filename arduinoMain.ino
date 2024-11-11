@@ -5,8 +5,7 @@ Encoding works but in transitioning the motors to be a positive to negative rang
 2. Find out expected max speed of motor to determiine optimal buffer to determine invalid values.
 2. Begin implementing Track controll 
 3. fix global variables
-4. fix edges/speed calculation
-5. Integrate with hall effect sensor 
+4. Integrate with hall effect sensor 
 
 change to trac cntrl code; i.e. compare rover speed to motor speed
 */
@@ -163,7 +162,6 @@ void trackCntrl() {
 
 }
 
-//Tested and working
 /*
 clock and encoder can make mistakes hense the pervious speed array,
 function compares against the average previous speed to disregard any outliers, may need to tweek based on
@@ -178,7 +176,8 @@ void encodeReading() {
   bool repeat=false;
   while(repeat==true){
     double sumSpeeds=0;
-    //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder };
+    //Testing line: allows connection of a clock to test function
+    //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder }; 
     if(counter>=6){
       counter=0;
     }
@@ -193,11 +192,12 @@ void encodeReading() {
       }
       previousState = currentState;
       double startTime = millis();
-      while (currentState == previousState) {
+      /* This should fix the edge detection meaning we measure the time from rising edge to falling edge instead of rising to rising
+      while (currentState == previousState) {  
         currentState = digitalRead(encoderArray[i]);
       }
       previousState = currentState;
-
+      */
       while (currentState == previousState) {
         currentState = digitalRead(encoderArray[i]);
       }
