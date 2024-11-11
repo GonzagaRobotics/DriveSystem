@@ -167,9 +167,6 @@ clock and encoder can make mistakes hense the pervious speed array,
 function compares against the average previous speed to disregard any outliers, may need to tweek based on
 rover speed and encoder percision
 
-may need to tweek MPH calculation.
-
-
 */
 void encodeReading() { 
   int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
