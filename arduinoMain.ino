@@ -1,9 +1,9 @@
 //To Do
 /*
 Encoding works but in transitioning the motors to be a positive to negative range motor commands broke
-1. fix motor commands: issues with negative positive values, range calculation, conversion
+1. test motor on arduino
 2. Find out expected max speed of motor to determiine optimal buffer to determine invalid values.
-2. Begin implementing Track controll 
+2. Find what order the motors in the array store in
 3. fix global variables
 4. Integrate with hall effect sensor 
 
@@ -16,12 +16,12 @@ change to trac cntrl code; i.e. compare rover speed to motor speed
 
 
 // Motor pins
-int motorFrontLeft = 3;
-int motorCenterLeft = 5;
-int motorBackLeft = 6;
-int motorFrontRight = 9;
-int motorCenterRight = 10;
-int motorBackRight = 11;
+const int motorFrontLeft = 3;
+const int motorCenterLeft = 5;
+const int motorBackLeft = 6;
+const int motorFrontRight = 9;
+const int motorCenterRight = 10;
+const int motorBackRight = 11;
 
 // Motor groups
 int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
@@ -57,16 +57,6 @@ void setup() {
     pinMode(motorFrontRightEncoder, INPUT);
     pinMode(motorCenterRightEncoder, INPUT);
     pinMode(motorBackRightEncoder, INPUT);
-
-    // Testing with Interupts, disregard
-    //attachInterrupt(digitalPinToInterrupt(motorFrontLeftEncoder), encodeReading, RISING);
-    //attachInterrupt(digitalPinToInterrupt(motorCenterLeftEncoder), centerLeftEncoderISR, RISING);
-    //attachInterrupt(digitalPinToInterrupt(motorBackLeftEncoder), backLeftEncoderISR, RISING);
-    //attachInterrupt(digitalPinToInterrupt(motorFrontRightEncoder), frontRightEncoderISR, RISING);
-    //attachInterrupt(digitalPinToInterrupt(motorCenterRightEncoder), centerRightEncoderISR, RISING);
-    //attachInterrupt(digitalPinToInterrupt(motorBackRightEncoder), backRightEncoderISR, RISING);
-
-
   }
 
   // Wait for the serial connection to initialize
@@ -124,8 +114,22 @@ void motorUpdate(int speedFB, int speedLR) {
   // Constrain speeds to valid PWM range (0 to 200)
   leftSpeed = constrain(leftSpeed, 0, 200);
   rightSpeed = constrain(rightSpeed, 0, 200);
-  leftSpeed=1/leftSpeed;
-  rightSpeed=1/rightSpeed; 
+  if(leftSpeed<100){
+    leftSpeed=-(1/leftSpeed);
+  }else if(leftSpeed>100){
+    leftSpeed=(1/(leftSpeed-100));
+  }else{
+    leftSpeed=0;
+  }
+
+  if(rightSpeed<100){
+    rightSpeed=-(1/rightSpeed);
+  }else if(rightSpeed>100){
+    rightSpeed=(1/(rightSpeed-100));
+  }else{
+    rightSpeed=0;
+  }
+
   // Set motor speeds
   setMotorSpeed(leftMotorGroup, leftSpeed);
   setMotorSpeed(rightMotorGroup, rightSpeed);
@@ -157,6 +161,19 @@ void trackCntrl() {
   if(trackCntrl!=1){
     return 0;
   }
+  int grace=5;
+  //double speedMph;
+  //double individualMotorSpeeds[6]={0,0,0,0,0,0}
+  bool traction=[true, true, true, true true, true]; 
+  for(int i=0; i<6; i++){
+    if(abs(individualMotorSpeeds[i]-speedMph)>grace){
+      traction[i]=false;
+    }else{
+      traction[i]=true;
+    }
+  }
+
+
   // Placeholder for traction control code
   //
 
