@@ -28,13 +28,13 @@ int leftMotorGroup[3] = {motorFrontLeft, motorCenterLeft, motorBackLeft};
 int rightMotorGroup[3] = {motorFrontRight, motorCenterRight, motorBackRight};
 
 // Speeds
-int speedFB = 0; // Forward/Backward speed (-100 to 100)
-int speedLR = 0; // Left/Right speed (-100 to 100)
+int speedFB = 0; // Forward/Backward speed (0 to 200)
+int speedLR = 0; // Left/Right speed (0 to 200)
 int trakEnable=0;
 double speedMph;
 double wheelCircumphrence=8; //Inches
 double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
-double individualMotorSpeeds[6]={0,0,0,0,0,0}
+double individualMotorSpeeds[6]={0,0,0,0,0,0};
 int counter=0;
 
 volatile int motorFrontLeftEncoder = 3;
@@ -82,7 +82,7 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
 
   int fbIndex = input.indexOf("FB:");
   int lrIndex = input.indexOf("LR:");
-  int enIndex = input.indexOf("EN:");
+  int enIndex = input.indexOf("EN:"); //Enable switch for track module
 
   if (fbIndex != -1) {
     int fbEnd = input.indexOf(' ', fbIndex);
@@ -94,7 +94,7 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
   if (lrIndex != -1) {
     int lrEnd = input.indexOf(' ', lrIndex);
     if (lrEnd == -1) lrEnd = input.length();
-    String lrValue = input.substring(lrIndex + 3, lrEnd); //Check if +4 is the correct value
+    String lrValue = input.substring(lrIndex + 3, lrEnd);
     speedLR = lrValue.toInt();
   }
 
@@ -157,28 +157,40 @@ void motorStop() { //Stops the Motor
   Serial.println("Motors Stopped");
 }
 
-void trackCntrl() {
-  if(trackCntrl!=1){
+void trackDetect() {
+  if(trakEnable!=1){
     return 0;
   }
   int grace=5;
+  bool issue=false;
   //double speedMph;
   //double individualMotorSpeeds[6]={0,0,0,0,0,0}
   bool traction=[true, true, true, true true, true]; 
   for(int i=0; i<6; i++){
     if(abs(individualMotorSpeeds[i]-speedMph)>grace){
       traction[i]=false;
+      issue=true;
     }else{
       traction[i]=true;
+      issue=false;
+    }
+
+    if(issue=true){
+
     }
   }
-
-
-  // Placeholder for traction control code
-  //
-
 }
 
+
+void trkCntrl(char L, int motorNum bool traction[]){
+  char direction;
+  if(LR=='L'){
+    //Will slow down the motor till speed is within the rovers speed 
+  }else{
+    //Will slow down the motor till speed is within the rovers speed 
+  }
+
+}
 /*
 clock and encoder can make mistakes hense the pervious speed array,
 function compares against the average previous speed to disregard any outliers, may need to tweek based on
