@@ -157,7 +157,7 @@ void motorStop() { //Stops the Motor
   Serial.println("Motors Stopped");
 }
 
-void trackDetect() {
+void trackDetect() { //Do not implement till ROS module is set and ready
   if(trakEnable!=1){
     return 0;
   }
