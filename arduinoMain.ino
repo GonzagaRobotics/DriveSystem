@@ -1,13 +1,10 @@
 //To Do
 /*
-Encoding works but in transitioning the motors to be a positive to negative range motor commands broke
-1. test motor on arduino
-2. Find out expected max speed of motor to determiine optimal buffer to determine invalid values.
-2. Find what order the motors in the array store in
-3. fix global variables
-4. Integrate with hall effect sensor 
 
-change to trac cntrl code; i.e. compare rover speed to motor speed
+1. Adjust speed calculation to fit Motor code.
+2. ROS module.
+
+Track Cntrl Code not working, debug when the rest is fixed
 */
 
 
@@ -16,8 +13,8 @@ change to trac cntrl code; i.e. compare rover speed to motor speed
 
 
 // Motor pins
-const int motorFrontLeft = 3;
-const int motorCenterLeft = 5;
+const int motorFrontLeft = 7;
+const int motorCenterLeft = 12;
 const int motorBackLeft = 6;
 const int motorFrontRight = 9;
 const int motorCenterRight = 10;
@@ -37,8 +34,8 @@ double previousSpeeds[6]={0, 0, 0, 0, 0, 0};
 double individualMotorSpeeds[6]={0,0,0,0,0,0};
 int counter=0;
 
-volatile int motorFrontLeftEncoder = 3;
-volatile int motorCenterLeftEncoder = 5;
+volatile int motorFrontLeftEncoder = 5;
+volatile int motorCenterLeftEncoder = 19;
 volatile int motorBackLeftEncoder = 6;
 volatile int motorFrontRightEncoder = 9;
 volatile int motorCenterRightEncoder = 10;
@@ -108,38 +105,34 @@ void parseCommand(String input) { //Pulls out the forard speed and left right sp
 } 
 
 void motorUpdate(int speedFB, int speedLR) {
-  double leftSpeed = speedFB + speedLR;
-  double rightSpeed = speedFB - speedLR;
+    // Normalize input speeds from 0-200 to -100 to 100
+    double speedFB_normalized = speedFB - 100;
+    double speedLR_normalized = speedLR - 100;
 
-  // Constrain speeds to valid PWM range (0 to 200)
-  leftSpeed = constrain(leftSpeed, 0, 200);
-  rightSpeed = constrain(rightSpeed, 0, 200);
-  if(leftSpeed<100){
-    leftSpeed=-(1/leftSpeed);
-  }else if(leftSpeed>100){
-    leftSpeed=(1/(leftSpeed-100));
-  }else{
-    leftSpeed=0;
-  }
+    // Calculate raw motor speeds
+    double leftSpeed = speedFB_normalized - speedLR_normalized;
+    double rightSpeed = speedFB_normalized + speedLR_normalized;
 
-  if(rightSpeed<100){
-    rightSpeed=-(1/rightSpeed);
-  }else if(rightSpeed>100){
-    rightSpeed=(1/(rightSpeed-100));
-  }else{
-    rightSpeed=0;
-  }
+    // Constrain motor speeds to valid range (-100 to 100)
+    leftSpeed = constrain(leftSpeed, -100, 100);
+    rightSpeed = constrain(rightSpeed, -100, 100);
 
-  // Set motor speeds
-  setMotorSpeed(leftMotorGroup, leftSpeed);
-  setMotorSpeed(rightMotorGroup, rightSpeed);
+    // Map motor speeds from -100 to 100 to -1.0 to 1.0
+    leftSpeed = leftSpeed / 100.0;
+    rightSpeed = rightSpeed / 100.0;
 
-  //debugging
-  Serial.print("Left Speed: ");
-  Serial.print(leftSpeed);
-  Serial.print(" Right Speed: ");
-  Serial.println(rightSpeed);
+    // Set motor speeds
+    setMotorSpeed(leftMotorGroup, leftSpeed);
+    setMotorSpeed(rightMotorGroup, rightSpeed);
+
+    // Debugging output
+    Serial.print("Left Speed: ");
+    Serial.print(leftSpeed);
+    Serial.print(" Right Speed: ");
+    Serial.println(rightSpeed);
 }
+
+
 
 void setMotorSpeed(int motorPins[], int speed) {
   int pwmValue = abs(speed);
@@ -156,6 +149,7 @@ void motorStop() { //Stops the Motor
   }
   Serial.println("Motors Stopped");
 }
+/*
 
 void trackDetect() { //Do not implement till ROS module is set and ready
   if(trakEnable!=1){
@@ -195,15 +189,16 @@ void trkCntrl(char L, int motorNum bool traction[]){
 clock and encoder can make mistakes hense the pervious speed array,
 function compares against the average previous speed to disregard any outliers, may need to tweek based on
 rover speed and encoder percision
-
 */
 void encodeReading() { 
-  int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
-  bool repeat=false;
+  //int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
+  int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder }; 
+
+  bool repeat=true;
   while(repeat==true){
     double sumSpeeds=0;
     //Testing line: allows connection of a clock to test function
-    //int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder }; 
+    
     if(counter>=6){
       counter=0;
     }
@@ -230,6 +225,7 @@ void encodeReading() {
       double endTime = millis();
       double time = endTime - startTime; 
       double rpmTime = (1000.0 / time) * 60.0; 
+      Serial.println(rpmTime);
       if (time > 0.1) { 
         double rpmTime = (1000.0 / time) * 60.0; 
         double currentSpeed = (rpmTime * (wheelCircumphrence / 12.0)) * 0.0568182;
@@ -254,5 +250,8 @@ void encodeReading() {
       previousSpeeds[counter]=speedMph;
     }
   }
-  Serial.println("Current Speed is: " + String(speedMph, 2));
+  if(speedMph>0){
+    Serial.println("Current Speed is: " + String(speedMph, 2));
+  }
+  
 }
