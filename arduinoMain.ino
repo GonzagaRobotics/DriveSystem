@@ -190,6 +190,17 @@ clock and encoder can make mistakes hense the pervious speed array,
 function compares against the average previous speed to disregard any outliers, may need to tweek based on
 rover speed and encoder percision
 */
+  int analogToDigital(int motor){
+    int status= analogRead(motor);
+    if(status>50){
+      status=1;
+    }else{
+      status=0;
+    }
+    return status;
+  }
+
+
 void encodeReading() { 
   //int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
   int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder }; 
@@ -206,10 +217,10 @@ void encodeReading() {
     int i=0;
     while(i<6){
       int previousState = 0;
-      int currentState = digitalRead(encoderArray[i]);
+      int currentState = analogToDigital(encoderArray[i]);
 
       while (currentState == previousState) {
-        currentState = digitalRead(encoderArray[i]);
+        currentState = analogToDigital(encoderArray[i]);
       }
       previousState = currentState;
       double startTime = millis();
@@ -220,7 +231,7 @@ void encodeReading() {
       previousState = currentState;
       */
       while (currentState == previousState) {
-        currentState = digitalRead(encoderArray[i]);
+        currentState = analogToDigital(encoderArray[i]);
       }
       double endTime = millis();
       double time = endTime - startTime; 
