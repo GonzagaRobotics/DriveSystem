@@ -13,7 +13,7 @@ Track Cntrl Code not working, debug when the rest is fixed
 
 
 // Motor pins
-const int motorFrontLeft = 7;
+const int motorFrontLeft = 4;
 const int motorCenterLeft = 12;
 const int motorBackLeft = 6;
 const int motorFrontRight = 9;
