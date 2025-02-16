@@ -53,7 +53,8 @@ void setMotorSpeed(int motorPins[], int speed);
 void setMotorSpeed(int motorPins[], int speed) ;
 void motorStop(int leftMotorGroup[], int rightMotorGroup[]) ;
 int analogToDigital(int motor);
-void encodeReading() ;
+//void encodeReading() ;
+
 void setup() {
   Serial.begin(9600);
   
@@ -74,11 +75,10 @@ void setup() {
   pinMode(motorCenterRightEncoder, INPUT);
   pinMode(motorBackRightEncoder, INPUT);
 
-  Serial.println("Setup Complete");
 }
 
 void loop() {
-  encodeReading();
+  //encodeReading();
   if (Serial.available() > 0) {
     // Read the incoming command
     String input = Serial.readStringUntil('\n');  // Read until newline
@@ -215,7 +215,7 @@ rover speed and encoder percision
     return status;
   }
 
-
+/*
 void encodeReading() { 
   //int encoderArray[6] = {motorFrontLeftEncoder, motorCenterLeftEncoder, motorBackLeftEncoder, motorFrontRightEncoder,motorCenterRightEncoder, motorBackRightEncoder };
   int encoderArray[6] = {motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder, motorFrontLeftEncoder,motorFrontLeftEncoder, motorFrontLeftEncoder }; 
@@ -239,12 +239,7 @@ void encodeReading() {
       }
       previousState = currentState;
       double startTime = millis();
-      /* This should fix the edge detection meaning we measure the time from rising edge to falling edge instead of rising to rising
-      while (currentState == previousState) {  
-        currentState = digitalRead(encoderArray[i]);
-      }
-      previousState = currentState;
-      */
+
       while (currentState == previousState) {
         currentState = analogToDigital(encoderArray[i]);
       }
@@ -281,3 +276,5 @@ void encodeReading() {
   }
   
 }
+
+*/
